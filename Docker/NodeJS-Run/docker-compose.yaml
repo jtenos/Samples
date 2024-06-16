@@ -1,0 +1,11 @@
+services:
+  node:
+    image: node:current
+    #ports:
+    #  - 3000:3000
+    volumes:
+      - .:/app
+    #stdin_open: true
+    #tty: true
+    command: npm run start
+    working_dir: /app

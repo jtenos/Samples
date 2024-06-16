@@ -1,0 +1,13 @@
+services:
+  git:
+    #image: ubuntu
+    #ports:
+    #  - 3000:3000
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ubuntu1
+    volumes:
+      - ./repos:/repos
+    stdin_open: true
+    tty: true

@@ -1,0 +1,10 @@
+services:
+  node-dev:
+    image: node:current
+    ports:
+      - 3000:3000
+    volumes:
+      - ./repos:/repos
+    working_dir: /app
+    stdin_open: true
+    tty: true

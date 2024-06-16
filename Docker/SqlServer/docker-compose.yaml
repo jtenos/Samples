@@ -1,0 +1,27 @@
+services:
+  mssql:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql1
+    ports:
+      - 1433:1433
+    volumes:
+      - ./data:/var/opt/mssql/data
+      - ./log:/var/opt/mssql/log
+      - ./secrets:/var/opt/mssql/secrets
+      - ./bak:/var/opt/mssql/bak
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=vewDFyrI4yER23!!2
+      - MSSQL_AGENT_ENABLED=True
+    network_mode: bridge
+    # networks:
+    #   - mssqlnet
+
+
+# networks:
+#   mssqlnet:
+#     name: bridge
+#     external: true

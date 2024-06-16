@@ -1,0 +1,9 @@
+services:
+  python-dev:
+    image: python
+    ports:
+      - 3000:3000
+    volumes:
+      - ./repos:/repos
+    stdin_open: true
+    tty: true

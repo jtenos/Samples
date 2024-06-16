@@ -1,0 +1,11 @@
+services:
+  golang-dev:
+    image: golang
+    ports:
+      - 3000:3000
+    volumes:
+      - ./repos:/repos
+      - ./gobin:/go/bin
+    stdin_open: true
+    tty: true
+    network_mode: bridge
