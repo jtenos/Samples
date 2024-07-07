@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Sample Web</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+	<div>
+		<label for="userName">User Name ("ad", "hr", "bad", or something else):</label>
+		<input type="text" id="userName" /><br />
+
+		<label for="orgID">Org ID (integer):</label>
+		<input type="text" id="orgID" /><br />
+
+		<input type="button" onclick="logIn()" value="Log In" />
+	</div>
+	<hr />
+	<div id="admin-section">
+		<h4>Admin</h4>
+		<div id="admin-success">You have not loaded admin section</div>
+		<div id="admin-message">You have not loaded admin section</div>
+	</div>
+	<hr />
+	<div id="hr-section">
+		<h4>HR</h4>
+		<div id="hr-success">You have not loaded HR section</div>
+		<div id="hr-message">You have not loaded HR section</div>
+	</div>
+	<hr />
+	<div id="auth-info">
+		<h4>User Info</h4>
+		<input id="success" style="width: 100%;" readonly />
+		<br />
+		<input id="jwt" style="width: 100%;" readonly />
+	</div>
+
+	<script>
+		function logIn() {
+			const userName = document.getElementById("userName").value;
+			const orgID = parseInt(document.getElementById("orgID").value, 10);
+
+			fetch("http://localhost:5255/login", {
+				method: "POST",
+				mode: "cors",
+				cache: "no-cache",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ userName, orgID })
+			}).then(resp => {
+				resp.json().then(data => {
+					document.getElementById("success").value = data.success
+					document.getElementById("jwt").value = data.jwt
+				})
+			})
+		}
+
+		setInterval(() => {
+
+			const jwt = document.getElementById("jwt").value;
+			fetch("http://localhost:5255/admin", {
+				method: "GET",
+				mode: "cors",
+				cache: "no-cache",
+				headers: { "Authorization": `Bearer ${jwt}` }
+			}).then(resp => {
+				if (!resp.ok) {
+					document.getElementById("admin-success").innerText = "Failure";
+					document.getElementById("admin-message").innerText = resp.statusText;
+					return;
+				}
+				return resp.json();
+			}).then(resp => {
+				if (resp) {
+					document.getElementById("admin-success").innerText = resp.success;
+					document.getElementById("admin-message").innerText = resp.message;
+				}
+			}).catch(resp => {
+				document.getElementById("admin-success").innerText = resp;
+				document.getElementById("admin-message").innerText = resp.statusText;
+			});
+
+			fetch("http://localhost:5255/humanresources", {
+				method: "GET",
+				mode: "cors",
+				cache: "no-cache",
+				headers: { "Authorization": `Bearer ${jwt}` }
+			}).then(resp => {
+				if (!resp.ok) {
+					document.getElementById("hr-success").innerText = "Failure";
+					document.getElementById("hr-message").innerText = resp.statusText;
+					return;
+				}
+				return resp.json();
+			}).then(resp => {
+				if (resp) {
+					document.getElementById("hr-success").innerText = resp.success;
+					document.getElementById("hr-message").innerText = resp.message;
+				}
+			}).catch(resp => {
+				document.getElementById("hr-success").innerText = resp;
+				document.getElementById("hr-message").innerText = resp.statusText;
+			});
+		}, 1000)
+	</script>
+</body>
+
+</html>
