@@ -1,2 +1,4 @@
 **/*.exe
 *.sqlite3
+**/bin/
+**/obj/
